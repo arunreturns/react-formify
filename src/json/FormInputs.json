@@ -1,0 +1,306 @@
+{
+  "Enum": {},
+  "Fields": [
+    {
+      "fldName": "Level",
+      "fldType": "Checkbox",
+      "fldOptions": ["Level 1", "Level 2", "Level 3", "Level 4", "Level 5"],
+      "triggerChildUpdates": [
+        "Option X",
+        "Option 2",
+        "Connect"
+      ],
+      "defaultValue": ["Level 1"],
+      "isMandatory": true
+    },
+    {
+      "fldName": "Option X",
+      "fldType": "Select",
+      "fldOptions": [
+        "",
+        "Level A",
+        "Level B",
+        "Level C",
+        "Level D",
+        "Level E",
+        "Level F",
+        "Level G",
+        "Level H",
+        "Level I"
+      ],
+      "hiddenOptions": {
+        "Level": {
+          "Level 2": [
+            "Level A",
+            "Level H"
+          ],
+          "Level 3": [
+            "Level E",
+            "Level I"
+          ]
+        },
+        "Option 2": {
+          "Level I": ["Level G"]
+        }
+      },
+      "disabledOptions": {
+        "Level": {
+          "Level 2": [
+            "Level E"
+          ]
+        }
+      },
+      "updateFromParent": {
+        "Level": {
+          "Level 1": "Level B",
+          "Level 2": "Level E",
+          "Level 1, Level 2, Level 3": "Level C",
+          "Level 3>": "Level H",
+          "Level 2, Level 5": "Level F"
+        }
+      },
+      "fldShown": {
+        "Level": [
+          "Level 1"
+        ]
+      },
+      "isMandatory": false
+    },
+    {
+      "fldName": "Option 2",
+      "fldType": "Checkbox",
+      "fldOptions": [
+        "Level I",
+        "Level II",
+        "Level III",
+        "Level IV"
+      ],
+      "updateFromParent": {
+        "Level": ""
+      },
+      "fldHidden": {
+        "Level": [""]
+      },
+      "fldShown": {
+        "Level": ["Level 2"]
+      },
+      "defaultValue": ["Level II"],
+      "isMandatory": true
+    },
+    {
+      "fldName": "MAN",
+      "fldType": "Radio",
+      "fldOptions": [
+        "Yes",
+        "No"
+      ],
+      "triggerChildUpdates": ["MAN Option", "Connect"],
+      "updateFromParent": {
+        "Connect": {
+          "Yes": "No",
+          "No": "No"
+        }
+      },
+      "defaultValue": "Yes",
+      "isMandatory": true
+    },
+    {
+      "fldName": "MAN Option",
+      "fldType": "Radio",
+      "fldOptions": [
+        "R Option",
+        "S Option"
+      ],
+      "updateFromParent": {
+        "MAN": {}
+      },
+      "triggerChildUpdates": [
+        "MAN Config"
+      ],
+      "fldHidden": {
+        "MAN": ["", "No"]
+      },
+      "isMandatory": true
+    },
+    {
+      "fldName": "MAN Config",
+      "fldType": "Checkbox",
+      "fldOptions": [
+        "AAR"
+      ],
+      "updateFromParent": {
+        "MAN Option": {}
+      },
+      "fldHidden": {
+        "MAN Option": "S Option"
+      },
+      "isMandatory": true
+    },
+    {
+      "fldName": "Connect",
+      "fldType": "Radio",
+      "fldOptions": [
+        "Yes", "No"
+      ],
+      "triggerChildUpdates": ["MAN"],
+      "updateFromParent": {
+        "Level": {
+          "Level 3>": "No"
+        },
+        "MAN": {
+          "Yes": "No", "No": "No"
+        }
+      },
+      "disabledOptions": {
+        "Level": {
+          "Level 4": [
+            "Yes"
+          ]
+        }
+      },
+      "hiddenOptions": {
+        
+      },
+      "isMandatory": true
+    },
+    {
+      "fldName": "Option 3",
+      "fldType": "Checkbox",
+      "fldOptions": [
+        "3 -- 1",
+        "3 -- 2",
+        "3 -- 3"
+      ],
+      "isMandatory": true
+    },
+    {
+      "fldName": "No of Ice Creams",
+      "fldType": "Radio",
+      "fldOptions": [
+        "1",
+        "2",
+        "3"
+      ],
+      "triggerChildUpdates": [
+        "No of Cones"
+      ],
+      "isMandatory": true
+    },
+    {
+      "fldName": "No of Cones",
+      "fldType": "Radio",
+      "fldOptions": [
+        "1",
+        "2",
+        "3"
+      ],
+      "updateFromParent": {
+        "No of Ice Creams": {
+          "1>": "2"
+        }
+      },
+      "isMandatory": true
+    },
+    {
+      "fldName": "Age",
+      "fldType": "Input",
+      "isMandatory": true,
+      "fldOptions": {
+        "type": "number",
+        "min": 18,
+        "max": 150
+      }
+    }
+  ],
+  "Validators": [
+    {
+      "type": "ALL",
+      "requiredFlds": ["Level", "MAN"]
+    },
+    {
+      "type": "CO-MANDATORY",
+      "parentFields": [
+        {
+          "fldName": "Level",
+          "fldValue": "Level 1"
+        },
+        {
+          "fldName": "Level",
+          "fldValue": "Level 4"
+        },
+        {
+          "fldName": "Level",
+          "fldValue": "Level 5"
+        },
+        { "fldName": "MAN", "fldValue": "Yes" },
+        {
+          "fldName": "MAN Option",
+          "fldValue": "R Option"
+        },
+        {
+          "fldName": "Level",
+          "fldValue": "Level 4"
+        }
+      ],
+      "childFields": [
+        [
+          {
+            "fldName": "Level",
+            "fldValue": "Level 3"
+          }
+        ],
+        [
+          {
+            "fldName": "Level",
+            "fldValue": "Level 5"
+          }
+        ],
+        [
+          {
+            "fldName": "Level",
+            "fldValue": "Level 4"
+          }
+        ],
+        [
+          {
+            "fldName": "MAN Option",
+            "fldValue": ["R Option", "S Option"]
+          },
+          {
+            "fldName": "Connect",
+            "fldValue": "No"
+          }
+        ],
+        [
+          {
+            "fldName": "MAN Config",
+            "fldValue": "AAR"
+          }
+        ],
+        [
+          {
+            "fldName": "No of Ice Creams",
+            "fldValue": "1"
+          },
+          {
+            "fldName": "No of Cones",
+            "fldValue": "1"
+          }
+        ]
+      ]
+    }
+  ],
+  "Sections": {
+    "Main": ["Level", "Option X", "Option 2"],
+    "Secondary": ["MAN", "MAN Option", "Connect"],
+    "Third": ["MAN Config"],
+    "Advanced": ["Option 3", "No of Ice Creams", "No of Cones", "Age"]
+  },
+  "ErrorMessages": {
+    "Age":{
+      "REGEX": "Some Regex error"
+    },
+    "COMANDATORY_REQUIRED_1_0": "Level 5 is required if Level 4 is entered",
+    "COMANDATORY_REQUIRED_2_0": "Level 4 is required if Level 5 is entered"
+  }
+}

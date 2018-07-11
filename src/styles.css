@@ -1,0 +1,69 @@
+@import url('https://fonts.googleapis.com/css?family=Lato');
+
+.supernova {
+  border: 1px solid red;
+  margin-bottom: 5px;
+}
+
+body {
+  font-family: 'Lato', sans-serif;
+}
+
+sup, .error-label {
+  color: red;
+}
+
+select, input {
+  font-family: 'Lato', sans-serif;
+  width: 70%;
+  margin: 2.5%;
+  padding: 1.5%;
+  border: 1px solid #CCC;
+  border-radius: 5px;
+  box-shadow: #CCC 1px 1px;
+  outline: none;
+}
+input[type='checkbox'], input[type='radio']{
+  outline: none;
+  width: initial;
+  border: 0px;
+  box-shadow: initial;
+}
+pre {
+  font-weight: bolder;
+}
+
+.checkbox-label, .radio-label, .select-label, .input-label {
+  width: 30%;
+  padding: 1%;
+  font-weight: bolder;
+  font-size: 16px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.checkbox-option, .radio-option, .select-option, .input-value {
+  display: flex;
+  align-content: center;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  margin: .25%;
+  width: 15%;
+}
+
+.select-option{
+  width: 70%;
+  margin: auto;
+}
+
+.checkbox-option label {
+  text-align: center;
+  width: 100%;
+  padding: 2%;
+}
+
+.checkbox-section-inputs, .radio-section-inputs, .select-section-inputs, .input-section-inputs {
+  display: flex;
+}

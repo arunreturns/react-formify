@@ -1,0 +1,38 @@
+{
+  "Option Level 1": {
+    "": {},
+    "Child 1": {
+      "": {},
+      "Child 1 Opt 1": {
+        "": {},
+        "Sub Child 1": {
+          "Test": ["", "1", "2"]
+        },
+        "Sub Child 2": {
+          "Test": [
+          ]
+        }
+      }
+    },
+    "Child 2": {
+      "": {},
+      "Child 1 Opt 1": {
+        "": {},
+        "Sub Child 3": {
+          "Test": [
+            "",
+            "5",
+            "6"
+          ]
+        },
+        "Sub Child 4": {
+          "Test": [
+            "",
+            "7",
+            "8"
+          ]
+        }
+      }
+    }
+  }
+}
