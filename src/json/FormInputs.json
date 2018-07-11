@@ -84,8 +84,7 @@
       "fldShown": {
         "Level": ["Level 2"]
       },
-      "defaultValue": ["Level II"],
-      "isMandatory": true
+      "defaultValue": ["Level II"]
     },
     {
       "fldName": "MAN",
@@ -101,8 +100,7 @@
           "No": "No"
         }
       },
-      "defaultValue": "Yes",
-      "isMandatory": true
+      "defaultValue": "Yes"
     },
     {
       "fldName": "MAN Option",
@@ -119,8 +117,7 @@
       ],
       "fldHidden": {
         "MAN": ["", "No"]
-      },
-      "isMandatory": true
+      }
     },
     {
       "fldName": "MAN Config",
@@ -133,8 +130,7 @@
       },
       "fldHidden": {
         "MAN Option": "S Option"
-      },
-      "isMandatory": true
+      }
     },
     {
       "fldName": "Connect",
@@ -160,8 +156,7 @@
       },
       "hiddenOptions": {
         
-      },
-      "isMandatory": true
+      }
     },
     {
       "fldName": "Option 3",
@@ -170,8 +165,7 @@
         "3 -- 1",
         "3 -- 2",
         "3 -- 3"
-      ],
-      "isMandatory": true
+      ]
     },
     {
       "fldName": "No of Ice Creams",
@@ -183,8 +177,7 @@
       ],
       "triggerChildUpdates": [
         "No of Cones"
-      ],
-      "isMandatory": true
+      ]
     },
     {
       "fldName": "No of Cones",
@@ -198,8 +191,7 @@
         "No of Ice Creams": {
           "1>": "2"
         }
-      },
-      "isMandatory": true
+      }
     },
     {
       "fldName": "Age",

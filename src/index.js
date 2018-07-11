@@ -14,7 +14,7 @@ const styles = {
   "display": "none"
 };
 
-const WrapperComp = (props) => <div className={`supernova section-${props.sectionIndex} ${props.sectionName}`}>{props.children}</div>
+const WrapperComp = (props) => <div key={props.sectionName + "-" + props.sectionIndex} className={`supernova section-${props.sectionIndex} ${props.sectionName}`}>{props.children}</div>
 
 class App extends React.Component {
   constructor(){
@@ -22,7 +22,8 @@ class App extends React.Component {
     this.state = {
       formObject: {},
       errorObject: {},
-      selected: {}
+      selected: {},
+      formErrors: []
     };
     this.handleSetFormObject = this.handleSetFormObject.bind(this);
     this.handleSetErrorObject = this.handleSetErrorObject.bind(this);
@@ -54,10 +55,11 @@ class App extends React.Component {
 
   }
   handleFormReset(){
-
+    this.setState({ formObject: {} })
   }
-  handleSetFormErrors(){
-
+  handleSetFormErrors(formErrors){ 
+    console.log("handleSetFormErrors", formErrors)
+    this.setState({ formErrors })
   }
   render(){
     let commonProps = {
@@ -79,7 +81,8 @@ class App extends React.Component {
             formData={FormInputs} sectionWrapper={WrapperComp}
             handleFormSubmit={this.handleFormSubmit}
             handleFormReset={this.handleFormReset}
-            handleSetFormErrors={this.handleSetFormErrors} />
+            handleSetFormErrors={this.handleSetFormErrors}
+            formErrors={this.state.formErrors} />
         </div>
         <div style={styles}>
           <FormField type="select" options={["A", "B", "C"]}
