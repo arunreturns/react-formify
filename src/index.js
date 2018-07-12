@@ -55,7 +55,7 @@ class App extends React.Component {
 
   }
   handleFormReset(){
-    this.setState({ formObject: {} })
+    this.setState({ formObject: {}, errorObject: {}, formErrors: [] })
   }
   handleSetFormErrors(formErrors){ 
     console.log("handleSetFormErrors", formErrors)

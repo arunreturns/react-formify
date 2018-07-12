@@ -33,7 +33,7 @@ class FormField extends React.Component {
   renderSelect() {
     let options = this.processOptions();
     let selectOptions = options.map(option => (
-      <option key={option.value} value={option.value} disabled={option.disabled} selected={option.value === this.props.formModel}>
+      <option key={option.value} value={option.value} disabled={option.disabled}>
         {option.label}
       </option>
     ));

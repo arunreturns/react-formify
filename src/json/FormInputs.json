@@ -207,7 +207,7 @@
   "Validators": [
     {
       "type": "ALL",
-      "requiredFlds": ["Level", "MAN"]
+      "requiredFlds": ["MAN"]
     },
     {
       "type": "CO-MANDATORY",

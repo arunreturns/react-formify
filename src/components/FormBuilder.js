@@ -9,7 +9,10 @@ function mapifyArray(arr) {
   arr.map(a => m[a.fldName] = a);
   return m;
 }
-
+/**
+ * Form Builder component. Reads a JSON with a pre-defined structure and creates fields
+ * based on the configuration.
+ */
 class FormBuilder extends React.Component {
   componentWillMount() {
     // Set the default values
@@ -432,7 +435,7 @@ class FormBuilder extends React.Component {
             the wrapper wont be rendered.
         */
         if (sectionContent.length > 0) {
-          SectionFields.push(React.createElement(this.props.sectionWrapper, { sectionName, sectionIndex }, sectionContent));
+          SectionFields.push(React.createElement(this.props.sectionWrapper, { sectionName, sectionIndex, key: `${sectionName}-${sectionIndex}-section` }, sectionContent));
           sectionIndex++;
         }
       }
@@ -472,31 +475,35 @@ FormBuilder.defaultProps = {
 }
 
 FormBuilder.propTypes = {
-  // Contains the fields for creating the form
+  /** Contains the fields for creating the form */
   formData: PropTypes.object.isRequired,
-  // Contains the object that has the form values
+  /** Contains the object that has the form values */
   formObject: PropTypes.object.isRequired,
-  // Contains the object that has the form values
+  /** Contains the object that has the form values */
   formErrors: PropTypes.array.isRequired,
-  // Contains the object that has the form errors
+  /** Contains the object that has the form errors */
   errorObject: PropTypes.object.isRequired,
-  // Method for updating the formObject
+  /** Method for updating the formObject */
   handleSetFormObject: PropTypes.func.isRequired,
-  // Method for updating the errorObject
+  /** Method for updating the errorObject */
   handleSetErrorObject: PropTypes.func.isRequired,
-  // Method called when the form is submitted
+  /** Method called when the form is submitted */
   handleFormSubmit: PropTypes.func.isRequired,
-  // Method called when the form is reset
+  /** Method called when the form is reset */
   handleFormReset: PropTypes.func.isRequired,
-  // Label for the Form
+  /** Label for the Form */
   formLabel: PropTypes.string,
-  // Flag to determine if defaults need to be initialized
+  /** Flag to determine if defaults need to be initialized */
   initDefaults: PropTypes.bool,
-  // The React/DOM element under which each sections are wrapped in
+  /** The React/DOM element under which each sections are wrapped in
+	PropTypes.string - In case of HTML DOM elements
+    PropTypes.element - In case of React components
+    PropTypes.func - In case of functional components
+   */
   sectionWrapper: PropTypes.oneOfType([
-    PropTypes.string, // In case of HTML DOM elements
-    PropTypes.element, // In case of React components
-    PropTypes.func // In case of functional components
+    PropTypes.string,
+    PropTypes.element,
+    PropTypes.func
   ])
 }
 

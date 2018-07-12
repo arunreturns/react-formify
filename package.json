@@ -10,6 +10,7 @@
     "react": "16.3.2",
     "react-dom": "16.3.2",
     "react-scripts": "1.1.4",
+    "react-styleguidist": "7.0.20",
     "react-test-renderer": "16.4.0"
   },
   "devDependencies": {},
