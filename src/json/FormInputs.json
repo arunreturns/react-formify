@@ -14,6 +14,26 @@
       "isMandatory": true
     },
     {
+      "fldName": "Level2",
+      "fldType": "Checkbox",
+      "fldOptions": [
+        "Level 1",
+        "Level 2",
+        "Level 3",
+        "Level 4",
+        "Level 5"
+      ],
+      "triggerChildUpdates": [
+        "Option X",
+        "Option 2",
+        "Connect"
+      ],
+      "defaultValue": [
+        "Level 1"
+      ],
+      "isMandatory": true
+    },
+    {
       "fldName": "Option X",
       "fldType": "Select",
       "fldOptions": [
@@ -194,6 +214,24 @@
       }
     },
     {
+      "fldName": "Sum Dummy Field 1",
+      "fldType": "Radio",
+      "fldOptions": [
+        "1",
+        "2",
+        "3"
+      ]
+    },
+    {
+      "fldName": "Sum Dummy Field 2",
+      "fldType": "Radio",
+      "fldOptions": [
+        "1",
+        "2",
+        "3"
+      ]
+    },
+    {
       "fldName": "Age",
       "fldType": "Input",
       "isMandatory": true,
@@ -224,14 +262,17 @@
           "fldName": "Level",
           "fldValue": "Level 5"
         },
-        { "fldName": "MAN", "fldValue": "Yes" },
+        {
+          "fldName": "MAN",
+          "fldValue": "Yes" 
+        },
         {
           "fldName": "MAN Option",
           "fldValue": "R Option"
         },
         {
           "fldName": "Level",
-          "fldValue": "Level 4"
+          "fldValue": "Level 1"
         }
       ],
       "childFields": [
@@ -271,19 +312,22 @@
         ],
         [
           {
-            "fldName": "No of Ice Creams",
-            "fldValue": "1"
+            "fldName": ["No of Ice Creams", "No of Cones"],
+            "valMode": "OR"
           },
           {
-            "fldName": "No of Cones",
-            "fldValue": "1"
+            "fldName": [
+              "Sum Dummy Field 1",
+              "Sum Dummy Field 2"
+            ],
+            "valMode": "AND"
           }
         ]
       ]
     }
   ],
   "Sections": {
-    "Main": ["Level", "Option X", "Option 2"],
+    "Main": ["Level", "Level2", "Option X", "Option 2"],
     "Secondary": ["MAN", "MAN Option", "Connect"],
     "Third": ["MAN Config"],
     "Advanced": ["Option 3", "No of Ice Creams", "No of Cones", "Age"]

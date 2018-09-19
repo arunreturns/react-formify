@@ -75,7 +75,7 @@ class FormBuilder extends React.Component {
       return { status: true };
     }
     formValue = Array.isArray(formValue) ? formValue : [formValue];
-    if (isArray ? formValue.some(r => childFldValue.indexOf(r) === -1) : formValue.indexOf(childFldValue) === -1 ) {
+    if (isArray ? formValue.some(r => childFldValue.indexOf(r) === -1) : formValue.indexOf(childFldValue) === -1) {
       return {
         status: false,
         errorMsg: `Missing required value ${childFldValue} for ${childFldName}`,
@@ -131,7 +131,7 @@ class FormBuilder extends React.Component {
     let errors = [];
     // Basic field isMandatory validation
     const Fields = this.props.formData.Fields;
-    for (let x = 0; x < Fields.length; x++){
+    for (let x = 0; x < Fields.length; x++) {
       let basicErr = this.validateField(Fields[x], this.props.formObject);
       if (basicErr) {
         let fldName = Fields[x].fldName.replace(/ /g, "_").toUpperCase();
@@ -141,6 +141,7 @@ class FormBuilder extends React.Component {
         })
       }
     }
+    // JSON Custom Validators
     for (let i = 0; i < validators.length; i++) {
       let validator = validators[i];
       switch (validator.type) {
@@ -201,7 +202,7 @@ class FormBuilder extends React.Component {
     // Remove the disabled values
     fldOptions = this.processOptions(disabledOptions, fldOptions, "DISABLE");
     if (fldOptions.indexOf(val) >= 0) return val;
-    return;
+    return "";
   }
 
   handleChildUpdates(field, val) {
@@ -239,7 +240,7 @@ class FormBuilder extends React.Component {
         console.info(`${childField.fldName} was declared as child of ${field.fldName}. But updateFromParent is not defined`);
         return;
       }
-      // Arrays wont make sense in JSON. So convert them to string
+      // Arrays wont make sense as keys in JSON. So convert them to string
       let compareVal = Array.isArray(val) ? val.join(", ") : val;
       const childUpdates = childField.updateFromParent[field.fldName];
       let value, updVal;
@@ -271,10 +272,10 @@ class FormBuilder extends React.Component {
         */
         updVal = updVal ? updVal : value;
       }
-      updVal = this.checkOptionAvailability(updVal, childField);
+      let availableVal = this.checkOptionAvailability(updVal, childField);
       // If the updVal is undefined, then use the previous value from formObject
       // so that the fields are properly retained.
-      if (updVal === undefined || typeof updVal === 'undefined')
+      if (typeof updVal === "undefined" && typeof availableVal === 'undefined')
         updVal = this.props.formObject[childField.fldName];
       this.handleValueChange(childField, type, updVal);
     });
@@ -287,6 +288,14 @@ class FormBuilder extends React.Component {
     }
     this.props.handleSetErrorObject(type, errorType, errorMsg);
   }
+
+  /**
+   * This method updates the formObject
+   * @param {Object} field The field information, required for childUpdates
+   * @param {String} type The field name
+   * @param {String|Int|Array} value The field value
+   * @public
+   */
   handleValueChange(field, type, value) {
     this.props.handleSetFormObject(type, value);
     this.handleChildUpdates(field, value);
@@ -304,7 +313,14 @@ class FormBuilder extends React.Component {
     });
   }
 
-  processOptions(transformOptions, fldOptions, transformType){
+  /**
+   * Method to process the original options and either filter out the options in
+   * transformOptions array or to disable it based on the transformType flag
+   * @param {Array} transformOptions Input options
+   * @param {Array} fldOptions Source Options for processing
+   * @param {String} transformType FITLER / DISABLE
+   */
+  processOptions(transformOptions, fldOptions, transformType) {
     let options = fldOptions;
     if (typeof fldOptions === 'undefined') return [];
     for (let transformKey in transformOptions) {
@@ -314,7 +330,7 @@ class FormBuilder extends React.Component {
         formValue = Array.isArray(formValue) ? formValue : [formValue];
         formValue.forEach(val => {
           if (val === transformValue) {
-            if (transformType === 'FILTER'){
+            if (transformType === 'FILTER') {
               options = options.filter(opt => transformParent[transformValue].indexOf(opt) === -1)
             }
             if (transformType === 'DISABLE') {
@@ -458,7 +474,7 @@ class FormBuilder extends React.Component {
       {this.props.sectionWrapper ? SectionFields : RenderedFields}
       <hr />
       {this.props.formErrors ? <div className="error-section">
-        <ul>{this.props.formErrors.map(formError => <li>{formError.errorType} : {formError.errorMsg}</li>)}</ul>
+        <ul>{this.props.formErrors.map((formError, idx) => <li key={formError.errorType + idx}>{formError.errorType} : {formError.errorMsg}</li>)}</ul>
       </div> : false}
 
       <button className="form-submit-button" onClick={this.validateForm.bind(this)}>Submit</button>
@@ -468,10 +484,7 @@ class FormBuilder extends React.Component {
 }
 
 FormBuilder.defaultProps = {
-  initDefaults: false,
-  formObject: {},
-  formErrors: [],
-  errorObject: {}
+  initDefaults: false
 }
 
 FormBuilder.propTypes = {
@@ -496,9 +509,9 @@ FormBuilder.propTypes = {
   /** Flag to determine if defaults need to be initialized */
   initDefaults: PropTypes.bool,
   /** The React/DOM element under which each sections are wrapped in
-	PropTypes.string - In case of HTML DOM elements
-    PropTypes.element - In case of React components
-    PropTypes.func - In case of functional components
+	  <br />PropTypes.string - In case of HTML DOM elements
+    <br />PropTypes.element - In case of React components
+    <br />PropTypes.func - In case of functional components
    */
   sectionWrapper: PropTypes.oneOfType([
     PropTypes.string,

@@ -11,11 +11,11 @@ const REGEX_MAP = {
 }
 
 class FormField extends React.Component {
-  renderErrors(type){
-    if (!this.props.errorModel || Object.keys(this.props.errorModel).length === 0 ) return;
+  renderErrors(type) {
+    if (!this.props.errorModel || Object.keys(this.props.errorModel).length === 0) return;
     return <div key={`${type}-section-errors`} className={`${type}-section-errors`}>
       {Object.keys(this.props.errorModel).map((errKey, idx) => {
-        return <label className="error-label" key={idx + errKey}>{this.props.errorModel[errKey]}</label>
+        return <label className="error-label" key={idx + errKey}>{this.props.errorModel[errKey]}</label>;
       })}
     </div>
   }
@@ -32,20 +32,22 @@ class FormField extends React.Component {
   }
   renderSelect() {
     let options = this.processOptions();
-    let selectOptions = options.map(option => (
-      <option key={option.value} value={option.value} disabled={option.disabled}>
+    let selectOptions = options.map(option => {
+      let optionId = (this.props.name + "_" + option.value).replace(/ /g, "_");
+      return <option className={`select-option-opt`} id={optionId} key={option.value} value={option.value} disabled={option.disabled} selected={this.props.formModel}>
         {option.label}
       </option>
-    ));
+    });
     let mandatoryInd = this.props.isMandatory ? <sup>&nbsp;*</sup> : false;
+    let fieldId = (this.props.name).replace(/ /g, "_");
     return (
       <div className="select-section">
         <div key="select-section-inputs" className="select-section-inputs">
-          <label className="select-label" htmlFor={this.props.name}>
+          <label className="select-label" htmlFor={fieldId}>
             {this.props.label}
             {mandatoryInd}
           </label>
-          <select className="select-option" onChange={(event) => this.props.handleValueChange(this.props.name, event.target.value)}
+          <select id={fieldId} className="select-option" onChange={(event) => this.props.handleValueChange(this.props.name, event.target.value)}
             value={this.props.formModel} selected={this.props.formModel}>{selectOptions}</select>
         </div>
         {this.renderErrors('select')}
@@ -53,9 +55,9 @@ class FormField extends React.Component {
     );
   }
 
-  handleCheckboxOrRadioChange(type, event){
+  handleCheckboxOrRadioChange(type, event) {
     let value = event.target.value;
-    if ( type === 'checkbox' ){
+    if (type === 'checkbox') {
       let formModel = this.props.formModel || [];
       formModel = Array.isArray(formModel) ? formModel : [formModel];
       if (event.target.checked)
@@ -71,20 +73,21 @@ class FormField extends React.Component {
 
   renderCheckboxOrRadio(type) {
     let options = this.processOptions(this.props.options);
-    let checkboxOptions = options.map(option => {
+    let checkboxOptions = options.map((option, idx) => {
       let checked;
-      if ( type === 'checkbox' )
+      if (type === 'checkbox')
         checked = this.props.formModel ? this.props.formModel.indexOf(option.value) >= 0 ? true : false : false;
       else
         checked = this.props.formModel === option.value;
-      return <span className={`${type}-option`} key={this.props.name + "_" + option.value}>
-        <label htmlFor={this.props.name + "_" + option.value}>
+      let fieldId = (this.props.name + "_" + option.value).replace(/ /g, "_");
+      return <span className={`${type}-option ${type}-option-${idx}`} key={this.props.name + "_" + option.value}>
+        <label htmlFor={fieldId}>
           {option.label}
         </label>
         <input disabled={option.disabled}
           name={this.props.name} value={option.value}
           type={type} onClick={this.handleCheckboxOrRadioChange.bind(this, type)}
-          id={this.props.name + "_" + option.value} checked={checked}
+          id={fieldId} checked={checked}
         />
       </span>
     });
@@ -100,17 +103,13 @@ class FormField extends React.Component {
         </div>
         {this.renderErrors(type)}
       </div>
-      
+
     );
   }
 
-  dateValidations(){
-
-  }
-
-  numberValidations(field, value){
-    if ( field.type !== 'number' ) return true;
-    if ( parseInt(value, 0) < parseInt(field.min, 0) )
+  numberValidations(field, value) {
+    if (field.type !== 'number') return true;
+    if (parseInt(value, 0) < parseInt(field.min, 0))
       return {
         type: "MINLENGTH",
         msg: `${this.props.name} should be more than ${field.min}`
@@ -138,20 +137,20 @@ class FormField extends React.Component {
     return true;
   }
 
-  validateInput(field, event){
+  validateInput(field, event) {
     let { value } = event.target;
-    let fieldType = field ? (field.regex ? field.regex : field.type) : "";
+    let fieldType = field.regex ? field.regex : field.type;
     fieldType = fieldType ? fieldType.toUpperCase() : "";
     const validationRegex = REGEX_MAP[fieldType] || new RegExp();
     let regexResult = validationRegex.test(value);
-    let regexValue = value.replace(validationRegex);
-    if (regexResult === false){
+    // let regexValue = value.replace(validationRegex);
+    if (regexResult === false) {
       this.props.handleSetErrorObject(this.props.name, "REGEX", `${this.props.name} is incorrect`)
     } else {
       this.props.handleSetErrorObject(this.props.name, "REGEX")
     }
     let numberValidationMsg = this.numberValidations(field, value);
-    if (numberValidationMsg !== true){
+    if (numberValidationMsg !== true) {
       this.props.handleSetErrorObject(this.props.name, numberValidationMsg.type, numberValidationMsg.msg);
     }
     let stringValidationMsg = this.stringValidations(field, value);
@@ -161,7 +160,7 @@ class FormField extends React.Component {
     this.props.handleValueChange(this.props.name, value)
   }
 
-  handleInputChange(field, event){
+  handleInputChange(field, event) {
     this.validateInput(field, event);
   }
 
@@ -205,7 +204,7 @@ class FormField extends React.Component {
     );
   }
 
-  renderDateField(){
+  renderDateField() {
     let field = this.props.config || {};
     let mandatoryInd = this.props.isMandatory ? <sup>&nbsp;*</sup> : false;
     return (

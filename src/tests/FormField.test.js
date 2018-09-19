@@ -6,13 +6,13 @@ configure({ adapter: new Adapter() });
 
 let formObj = {};
 let errorObj = {};
-function handleValueChange(name, value) {
-  // console.log("[TEST]", name, value);
+const handleValueChange = (name, value) => {
   formObj[name] = value;
 }
-function handleSetErrorObject(name, value) {
-  // console.log("[TEST]", name, value);
-  errorObj[name] = value;
+const handleSetErrorObject = (name, value, msg) => {
+  errorObj[name] = {
+    [value]: msg
+  };
 }
 
 let formFieldProps = {
@@ -20,8 +20,8 @@ let formFieldProps = {
   handleSetErrorObject
 }
 
-describe('Select Tests', () => {
-  it("Should render a FormField Select", () => {
+describe('[FORMFIELD]-[SELECT]', () => {
+  it("[RENDER] : Should render a FormField Select", () => {
     const component = shallow(
       <FormField type="select" options={["A", "B"]} label={"Label Text"} name={"selectOption"} {...formFieldProps} isMandatory={true} />,
     );
@@ -40,7 +40,7 @@ describe('Select Tests', () => {
     expect(formObj.selectOption).toBe("A");
   });
 
-  it("Should render a FormField Select with Custom Options", () => {
+  it("[RENDER] : Should render a FormField Select with Custom Options", () => {
     const options = [{ label: "Option 1", value: "A" }, { label: "Option 2", value: "B" }];
     const component = shallow(
       <FormField type="select" options={options} label={"Label Text Custom"} name={"selectOptions"} {...formFieldProps} />,
@@ -59,22 +59,46 @@ describe('Select Tests', () => {
   });
 })
 
+describe('[FORMFIELD]-[SELECT]', () => {
+  it("[STYLES] : Should have a select-section", () => {
+    const component = shallow(
+      <FormField type="select" options={["A", "B"]} label={"Label Text"} name={"selectOption"} {...formFieldProps} isMandatory={true} />,
+    );
+    expect(component.find('.select-section').length).toBe(1);
+    expect(component.find('.select-section-inputs').length).toBe(1);
+  });
+
+  it("[STYLES] : Should render the proper select-section-inputs", () => {
+    const component = shallow(
+      <FormField type="select" options={["A", "B"]} label={"Label Text"} formModel={formObj.selectOption} name={"selectOption"} {...formFieldProps} isMandatory={true} />,
+    );
+    const selectSectionInputs = component.find('.select-section-inputs');
+    expect(selectSectionInputs.find('.select-option').length).toBe(1);
+    expect(selectSectionInputs.find('.select-option-opt').length).toBe(2);
+    expect(selectSectionInputs.find('.select-label').length).toBe(1);
+  });
+})
+
 describe('Checkbox Tests', () => {
   it("Should render a FormField Checkbox", () => {
+    let options = ["A", "B", "C"];
     const component = shallow(
       <FormField
         type="checkbox" formModel={formObj.checkboxOptn}
-        options={["A", "B", "C"]}
+        options={options}
         name="checkboxOptn"
-        label={"Select Checkbox"} {...formFieldProps} 
+        label={"Select Checkbox"} {...formFieldProps}
       />
     );
+    
     let inputField = component.find("input");
+    // Render number of options
     expect(inputField.length).toBe(3);
-    inputField.map(fld => expect(fld.props().type === 'checkbox'))
+    inputField.forEach((fld, idx) => {
+      expect(fld.props().type === 'checkbox')
+      expect(fld.props().value === options[idx])
+    })
     inputField.at(0).simulate('click', { target: { value: 'A', checked: true } });
-    inputField.at(0).simulate('click', { target: { value: 'A', checked: true } });
-    console.log(formObj.checkboxOptn);
     expect(formObj.checkboxOptn).toContain("A");
     inputField.at(0).simulate('click', { target: { value: 'B', checked: true } });
     expect(formObj.checkboxOptn).toContain("B");
@@ -89,16 +113,16 @@ describe('Checkbox Tests', () => {
         type="checkbox"
         options={options}
         name="checkboxOptn"
-        label={"Select Checkbox"} {...formFieldProps} 
+        label={"Select Checkbox"} {...formFieldProps}
       />
     );
     let spanField = component.find("sup");
     expect(spanField.length).toBe(1);
     let inputField = component.find("input");
     expect(inputField.length).toBe(2);
-    inputField.map((fld, idx) => {
+    inputField.forEach((fld, idx) => {
       expect(fld.props().value).toBe(options[idx].value)
-      expect(fld.props().type === 'checkbox')
+      expect(fld.props().type).toBe('checkbox')
     })
     inputField.at(0).simulate('click', { target: { value: 'A', checked: true } });
     expect(formObj.checkboxOptn).toContain("A");
@@ -109,6 +133,59 @@ describe('Checkbox Tests', () => {
   });
 })
 
+describe('Checkbox Classes Test', () => {
+  it('should have a checkbox-section', () => {
+    let options = ["A", "B", "C"];
+    const component = shallow(
+      <FormField
+        type="checkbox" formModel={formObj.checkboxOptn}
+        options={options}
+        name="checkboxOptn"
+        label={"Select Checkbox"} {...formFieldProps}
+      />
+    );
+
+    let inputField = component.find("input");
+    // Render number of options
+    expect(inputField.length).toBe(3);
+    inputField.forEach((fld, idx) => {
+      expect(fld.props().type === 'checkbox')
+      expect(fld.props().value === options[idx])
+    })
+    expect(component.find(".checkbox-section-inputs").length).toBe(1);
+  })
+
+  it('should have a checkbox-section having 3 checkbox-options', () => {
+    let options = ["A", "B", "C"];
+    const component = shallow(
+      <FormField
+        type="checkbox" formModel={formObj.checkboxOptn}
+        options={options}
+        name="checkboxOptn"
+        label={"Select Checkbox"} {...formFieldProps}
+      />
+    );
+    expect(component.find(".checkbox-section-inputs").length).toBe(1);
+    expect(component.find(".checkbox-option").length).toBe(3);
+  })
+
+  it('checkbox-options should be uniquely identifiable', () => {
+    let options = ["A", "B", "C"];
+    const component = shallow(
+      <FormField
+        type="checkbox" formModel={formObj.checkboxOptn}
+        options={options}
+        name="checkboxOptn"
+        label={"Select Checkbox"} {...formFieldProps}
+      />
+    );
+    expect(component.find(".checkbox-section-inputs").length).toBe(1);
+    const checkboxOptions = component.find(".checkbox-option");
+    expect(checkboxOptions.length).toBe(3);
+    checkboxOptions.map((checkboxOption, i) => expect(checkboxOption.props().className).toBe(`checkbox-option checkbox-option-${i}`))
+  })
+})
+
 describe('Radio Tests', () => {
   it("Should render a FormField Radio", () => {
     const component = shallow(
@@ -116,12 +193,12 @@ describe('Radio Tests', () => {
         type="radio"
         options={["A", "B", "C"]}
         name="radioOptn"
-        label={"Select Radio"} {...formFieldProps} 
+        label={"Select Radio"} {...formFieldProps}
       />
     );
     let inputField = component.find("input");
     expect(inputField.length).toBe(3);
-    inputField.map(fld => expect(fld.props().type === 'checkbox'))
+    inputField.forEach(fld => expect(fld.props().type).toBe('radio'))
     inputField.at(0).simulate('click', { target: { value: 'A' } });
     expect(formObj.radioOptn).toBe("A");
     inputField.at(0).simulate('click', { target: { value: 'B' } });
@@ -135,16 +212,16 @@ describe('Radio Tests', () => {
         type="radio" isMandatory={true}
         options={options}
         name="radioOptn"
-        label={"Select Radio"} {...formFieldProps} 
+        label={"Select Radio"} {...formFieldProps}
       />
     );
     let spanField = component.find("sup");
     expect(spanField.length).toBe(1);
     let inputField = component.find("input");
     expect(inputField.length).toBe(2);
-    inputField.map((fld, idx) => {
+    inputField.forEach((fld, idx) => {
       expect(fld.props().name).toBe("radioOptn")
-      expect(fld.props().type === 'checkbox')
+      expect(fld.props().type).toBe('radio')
     })
     inputField.at(0).simulate('click', { target: { value: 'A' } });
     expect(formObj.radioOptn).toBe("A");
@@ -153,12 +230,65 @@ describe('Radio Tests', () => {
   });
 })
 
+describe('Radio Classes Test', () => {
+  it('should have a radio-section', () => {
+    let options = ["A", "B", "C"];
+    const component = shallow(
+      <FormField
+        type="radio" formModel={formObj.radioOptn}
+        options={options}
+        name="radioOptn"
+        label={"Select Radio"} {...formFieldProps}
+      />
+    );
+
+    let inputField = component.find("input");
+    // Render number of options
+    expect(inputField.length).toBe(3);
+    inputField.forEach((fld, idx) => {
+      expect(fld.props().type === 'radio')
+      expect(fld.props().value === options[idx])
+    })
+    expect(component.find(".radio-section-inputs").length).toBe(1);
+  })
+
+  it('should have a radio-section having 3 radio-options', () => {
+    let options = ["A", "B", "C"];
+    const component = shallow(
+      <FormField
+        type="radio" formModel={formObj.radioOptn}
+        options={options}
+        name="radioOptn"
+        label={"Select Radio"} {...formFieldProps}
+      />
+    );
+    expect(component.find(".radio-section-inputs").length).toBe(1);
+    expect(component.find(".radio-option").length).toBe(3);
+  })
+
+  it('radio-options should be uniquely identifiable', () => {
+    let options = ["A", "B", "C"];
+    const component = shallow(
+      <FormField
+        type="radio" formModel={formObj.radioOptn}
+        options={options}
+        name="radioOptn"
+        label={"Select Radio"} {...formFieldProps}
+      />
+    );
+    expect(component.find(".radio-section-inputs").length).toBe(1);
+    const radioOptions = component.find(".radio-option");
+    expect(radioOptions.length).toBe(3);
+    radioOptions.map((radioOption, i) => expect(radioOption.props().className).toBe(`radio-option radio-option-${i}`))
+  })
+})
+
 describe('Input Tests', () => {
   it("Should render a Input Number", () => {
     let component = shallow(
       <FormField config={{ type: "number" }} name="inputNum"
         type="input" formModel={formObj.inputNum}
-        label={"Select Input"} {...formFieldProps} 
+        label={"Select Input"} {...formFieldProps}
       />
     );
     let inputField = component.find("input");
@@ -169,12 +299,44 @@ describe('Input Tests', () => {
     expect(formObj.inputNum).toBe("A");
   });
 
+  it("Should render a Input Number with min max config - min validation", () => {
+    let component = shallow(
+      <FormField config={{ type: "number", min: 10, max: 100 }} name="inputNum"
+        type="input" formModel={formObj.inputNum}
+        label={"Select Input"} {...formFieldProps}
+      />
+    );
+    let inputField = component.find("input");
+    let spanField = component.find("sup");
+    expect(spanField.length).toBe(0);
+    inputField.simulate('change', { target: { value: 9 } });
+    expect(inputField.props().type).toBe("number");
+    expect(formObj.inputNum).toBe(9);
+    expect(errorObj["inputNum"].MINLENGTH).toBe("inputNum should be more than 10")
+  });
+
+  it("Should render a Input Number with min max config - max validation", () => {
+    let component = shallow(
+      <FormField config={{ type: "number", min: 10, max: 100 }} name="inputNum"
+        type="input" formModel={formObj.inputNum}
+        label={"Select Input"} {...formFieldProps}
+      />
+    );
+    let inputField = component.find("input");
+    let spanField = component.find("sup");
+    expect(spanField.length).toBe(0);
+    inputField.simulate('change', { target: { value: 101 } });
+    expect(inputField.props().type).toBe("number");
+    expect(formObj.inputNum).toBe(101);
+    expect(errorObj["inputNum"].MAXLENGTH).toBe("inputNum should be less than 100")
+  });
+
   it("Should render a Input with text config", () => {
     const config = { type: "text" };
     const component = shallow(
       <FormField config={config} name="inputText"
         type="input" isMandatory={true} formModel={formObj.inputText}
-        label={"Select Text Input"} {...formFieldProps} 
+        label={"Select Text Input"} {...formFieldProps}
       />
     );
     let spanField = component.find("sup");
@@ -184,6 +346,63 @@ describe('Input Tests', () => {
     expect(inputField.props().type).toBe("text");
     expect(formObj.inputText).toBe("12");
   });
+
+  it("Should render a Input with text config and use a Regex", () => {
+    const config = { type: "text", regex: "ALPHA" };
+    const component = shallow(
+      <FormField config={config} name="inputText"
+        type="input" isMandatory={true} formModel={formObj.inputText}
+        label={"Select Text Input"} {...formFieldProps}
+      />
+    );
+    let spanField = component.find("sup");
+    expect(spanField.length).toBe(1);
+    let inputField = component.find("input");
+    expect(inputField.props().type).toBe("text");
+
+
+    inputField.simulate('change', { target: { value: "+" } });
+    expect(errorObj["inputText"].REGEX).toBe("inputText is incorrect")
+    expect(formObj.inputText).toBe("+");
+
+    inputField.simulate('change', { target: { value: "ABCE" } });
+    expect(errorObj["inputText"].REGEX).toBe(undefined)
+    expect(formObj.inputText).toBe("ABCE");
+  });
+
+  it("Should render a Input with text config with min config", () => {
+    const config = { type: "text", min: 15 };
+    const component = shallow(
+      <FormField config={config} name="inputText"
+        type="input" isMandatory={true} formModel={formObj.inputText}
+        label={"Select Text Input"} {...formFieldProps}
+      />
+    );
+    let spanField = component.find("sup");
+    expect(spanField.length).toBe(1);
+    let inputField = component.find("input");
+    inputField.simulate('change', { target: { value: 'AAAAAAAAAAAAAA' } });
+    expect(inputField.props().type).toBe("text");
+    expect(formObj.inputText).toBe("AAAAAAAAAAAAAA");
+    expect(errorObj["inputText"].MINLENGTH).toBe("inputText should be more than 15")
+  });
+
+  it("Should render a Input with text config with max config", () => {
+    const config = { type: "text", max: 15 };
+    const component = shallow(
+      <FormField config={config} name="inputText"
+        type="input" isMandatory={true} formModel={formObj.inputText}
+        label={"Select Text Input"} {...formFieldProps}
+      />
+    );
+    let spanField = component.find("sup");
+    expect(spanField.length).toBe(1);
+    let inputField = component.find("input");
+    inputField.simulate('change', { target: { value: 'AAAAAAAAAAAAAAAA' } });
+    expect(inputField.props().type).toBe("text");
+    expect(formObj.inputText).toBe("AAAAAAAAAAAAAAAA");
+    expect(errorObj["inputText"].MAXLENGTH).toBe("inputText should be less than 15")
+  });
 });
 
 describe('Date Tests', () => {
@@ -191,7 +410,7 @@ describe('Date Tests', () => {
     const component = shallow(
       <FormField name="dateInput"
         type="date" isMandatory={true}
-        label={"Select Input"} {...formFieldProps} 
+        label={"Select Input"} {...formFieldProps}
       />
     );
     let spanField = component.find("sup");
@@ -206,13 +425,13 @@ describe('Date Tests', () => {
     const component = shallow(
       <FormField name="dateInput" config={config}
         type="date" isMandatory={true} value={formObj.dateInput}
-        label={"Select Input"} {...formFieldProps} 
+        label={"Select Input"} {...formFieldProps}
       />
     );
     let spanField = component.find("sup");
     expect(spanField.length).toBe(1);
     let inputField = component.find("input");
-    inputField.simulate('change', { target: { value: '28/03/2018' } }); 
+    inputField.simulate('change', { target: { value: '28/03/2018' } });
     expect(formObj.dateInput).toBe("28/03/2018");
   });
 })
@@ -223,7 +442,7 @@ describe('Text Area Tests', () => {
       <FormField name="textAreaInput"
         formModel={formObj.textAreaInput}
         type="textarea" isMandatory={true}
-        label={"Select Input"} {...formFieldProps} 
+        label={"Select Input"} {...formFieldProps}
       />
     );
     let spanField = component.find("sup");
@@ -240,7 +459,7 @@ describe('Text Area Tests', () => {
         config={config}
         formModel={formObj.textAreaInput}
         type="textarea" isMandatory={true}
-        label={"Select Input"} {...formFieldProps} 
+        label={"Select Input"} {...formFieldProps}
       />
     );
     let spanField = component.find("sup");
@@ -255,7 +474,7 @@ describe('Text Area Tests', () => {
 
 describe('Error Cases', () => {
   it('should gracefully handle a no props render', () => {
-    const component = shallow(
+    shallow(
       <FormField />,
     );
   })
@@ -264,7 +483,7 @@ describe('Error Cases', () => {
     const component = shallow(
       <FormField name="inputNum"
         type="input" isMandatory={true}
-        label={"Select Input"} {...formFieldProps} 
+        label={"Select Input"} {...formFieldProps}
       />
     );
     let spanField = component.find("sup");
@@ -282,7 +501,7 @@ describe('Error Cases', () => {
         type="checkbox" formModel={formObj.checkboxOptn}
         options={["A", "B", "C"]}
         name="checkboxOptn"
-        label={"Select Checkbox"} {...formFieldProps} 
+        label={"Select Checkbox"} {...formFieldProps}
       />
     );
     let inputField = component.find("input");
@@ -295,4 +514,46 @@ describe('Error Cases', () => {
     inputField.at(0).simulate('click', { target: { value: 'B', checked: false } });
     expect(formObj.checkboxOptn).not.toContain("B");
   });
+
+  it("Should render a FormField with an empty errorModel", () => {
+    formObj.checkboxOptn = "A";
+    const component = shallow(
+      <FormField
+        type="checkbox" formModel={formObj.checkboxOptn}
+        options={["A", "B", "C"]}
+        name="checkboxOptn"
+        label={"Select Checkbox"} {...formFieldProps}
+        errorModel={[]}
+      />
+    );
+    let inputField = component.find("input");
+    expect(inputField.length).toBe(3);
+    inputField.map(fld => expect(fld.props().type === 'checkbox'))
+    inputField.at(0).simulate('click', { target: { value: 'A', checked: true } });
+    expect(formObj.checkboxOptn).toContain("A");
+    inputField.at(0).simulate('click', { target: { value: 'B', checked: true } });
+    expect(formObj.checkboxOptn).toContain("B");
+    inputField.at(0).simulate('click', { target: { value: 'B', checked: false } });
+    expect(formObj.checkboxOptn).not.toContain("B");
+  });
+})
+
+describe('Error Handling', () => {
+  it('should display the error fields properly', () => {
+    const component = shallow(
+      <FormField
+        type="checkbox" formModel={formObj.checkboxOptn}
+        options={["A", "B", "C"]}
+        name="checkboxOptn"
+        label={"Select Checkbox"} {...formFieldProps}
+        errorModel={{
+          'REGEX': 'Some Validation Message',
+          'ERR': "Some Test Error"
+        }}
+      />
+    );
+    let errorSection = component.find('.checkbox-section-errors');
+    expect(errorSection.find('.error-label').at(0).text()).toBe("Some Validation Message");
+    expect(errorSection.find('.error-label').at(1).text()).toBe("Some Test Error");
+  })
 })
